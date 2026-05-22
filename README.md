@@ -5,6 +5,7 @@
 
 The core training part of this project is based on snake-ai-pytorch by Patrick Loeber.
 https://github.com/patrickloeber/snake-ai-pytorch
+
 ---
 
 ### 🎮 Live Demo
