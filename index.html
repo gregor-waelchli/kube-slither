@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>KubeSlither: Snake AI Training Live Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #111; color: #0f0; margin: 20px; }
+        .container { display: flex; gap: 25px; flex-wrap: wrap; }
+        canvas#game { border: 3px solid #0f0; background: #000; }
+        .info { font-size: 1.1em; margin-bottom: 10px; }
+        .watching { color: #ff0; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+    </style>
+</head>
+<body>
+    <h1>🐍 KubeSlither: Learning — Iteration: <span id="episode">0</span></h1>
+    <div class="info">
+        <span id="status">Training fast...</span>
+    </div>
+
+    <div class="container">
+        <div>
+            <canvas id="game" width="640" height="480"></canvas>
+        </div>
+        <div class="chart-container" style="width: 720px; height: 420px;">
+            <canvas id="scoreChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('game');
+        const ctx = canvas.getContext('2d');
+        const BLOCK = 20;
+
+        // Chart.js
+        const scoreChart = new Chart(document.getElementById('scoreChart'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    { label: 'Score', borderColor: '#00ff00', data: [], tension: 0.2, borderWidth: 2 },
+                    { label: 'Avg Score (50)', borderColor: '#ffaa00', data: [], tension: 0.2, borderWidth: 3 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { x: { title: { display: true, text: 'Episode' } }, y: { title: { display: true, text: 'Score' } } }
+            }
+        });
+
+        const ws = new WebSocket('ws://localhost:8000/ws');
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            if (data.type === "game") {
+                // Draw game
+                ctx.fillStyle = '#111';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#0f0';
+                data.snake.forEach(([x, y]) => ctx.fillRect(x, y, BLOCK, BLOCK));
+
+                ctx.fillStyle = '#f00';
+                ctx.fillRect(data.food[0], data.food[1], BLOCK, BLOCK);
+
+                document.getElementById('episode').textContent = data.episode;
+
+                // Show "WATCHING" when slow mode
+                const statusEl = document.getElementById('status');
+                if (data.is_watchable) {
+                    statusEl.textContent = "👀 WATCHING EPISODE " + data.episode;
+                    statusEl.classList.add('watching');
+                } else {
+                    statusEl.textContent = "Training fast...";
+                    statusEl.classList.remove('watching');
+                }
+            }
+            else if (data.type === "chart") {
+                scoreChart.data.labels.push(data.episode);
+                scoreChart.data.datasets[0].data.push(data.score);
+                scoreChart.data.datasets[1].data.push(data.avg_score);
+
+                if (scoreChart.data.labels.length > 250) {
+                    scoreChart.data.labels.shift();
+                    scoreChart.data.datasets[0].data.shift();
+                    scoreChart.data.datasets[1].data.shift();
+                }
+                scoreChart.update('none');
+            }
+        };
+
+        ws.onclose = () => console.log('Connection closed');
+    </script>
+</body>
+</html>
