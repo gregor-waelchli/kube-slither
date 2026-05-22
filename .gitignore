@@ -1,1 +1,3 @@
 kubeslither_env
+.idea/
+*.iml

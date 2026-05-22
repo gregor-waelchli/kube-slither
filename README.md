@@ -16,7 +16,7 @@ A real-time Snake game where an AI agent learns to play using **Deep Q-Learning*
 Watch the snake improve live as it trains on K8s with GPU support.
 
 #### Architecture
-![architecture.png](architecture.png)
+![architecture.png](img/architecture.png)
 
 ---
 
@@ -27,6 +27,8 @@ Watch the snake improve live as it trains on K8s with GPU support.
 - **Distributed Training Ready** – Designed for Kubernetes + GPU clusters
 - **FastAPI + WebSocket** – Smooth real-time interaction
 - **Live Stats** – Score, average score, epsilon decay, and training progress
+
+![visualization.png](img/visualization.png)
 
 ---
 
