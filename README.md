@@ -54,7 +54,7 @@ docker run kube-slither -p 8000:8000
 https://localhost:8000
 
 ```
-##### Kubernetes
+#### Kubernetes
 Details will heavily depend on the specific Kubernetes setup.
 See sample pod definition in ./k8s-sample
 ```bash
