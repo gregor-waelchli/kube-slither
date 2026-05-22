@@ -3,7 +3,8 @@
 **Reinforcement Learning Snake at Scale**  
 *Training intelligent snakes on Kubernetes with GPU acceleration*
 
-The core training part of this project is based on snake-ai-pytorch by Patrick Loeber.
+Disclaimer:
+The core training part of this project is based on snake-ai-pytorch by Patrick Loeber. 
 https://github.com/patrickloeber/snake-ai-pytorch
 
 ---
