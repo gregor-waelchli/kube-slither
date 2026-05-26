@@ -15,7 +15,7 @@ spec:
 
   containers:
     - name: gpu-container
-      image: ghcr.io/gregor-waelchli/kube-slither:0.1.4
+      image: ghcr.io/gregor-waelchli/kube-slither:v0.1.4
       resources:
         limits:
           cpu: 4
